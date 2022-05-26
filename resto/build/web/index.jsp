@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <form action="/RestoFinal/Authentification" method="POST" >
+        <form action="/resto/Authentification" method="POST" >
             <input type="text" name="username">
             <input type="text" name="password">
             <input type="submit" >

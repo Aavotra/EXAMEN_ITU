@@ -1,6 +1,7 @@
 package Controllers;
 
-import Model.services.DAO;
+import Model.services.Dao;
+import Model.services.Service;
 import Model.utilisateur.Utilisateur;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,17 +20,28 @@ import javax.servlet.http.HttpServletResponse;
 public class Authentification extends HttpServlet 
 {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception 
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) 
-        {
+        {   
             try
             {
-                DAO d = new DAO();
                 out.println(request.getParameter("username"));
                 out.println(request.getParameter("password"));
-                if(d.test_login(request.getParameter("username"),request.getParameter("password"))==true)
+                //Dao d = new Dao(out);
+                try
+                {
+                    Service s = new Service();
+                }catch(Exception e)
+                {
+                    out.println(e);
+                }
+                
+                out.println(request.getParameter("username"));
+                out.println(request.getParameter("password"));
+                
+                /*if(d.test_login(request.getParameter("username"),request.getParameter("password"))==true)
                 {
                     out.println("Hello");
                     Utilisateur [] tab = d.find_all_user();
@@ -70,12 +82,19 @@ public class Authentification extends HttpServlet
                     out.println("Coucou");
                    RequestDispatcher rd=request.getRequestDispatcher("login.jsp");  
                    rd.forward(request, response);
-                }
+                }*/
             }catch(Exception e)
             {
+                //out.println(request.getParameter("username"));
+                //out.println(request.getParameter("password"));
+                 out.println("Coucou");
                 out.println(e);
+                e.printStackTrace();
             }
             
+        } catch (IOException ex) {
+            Logger.getLogger(Authentification.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 

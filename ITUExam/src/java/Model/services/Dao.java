@@ -3,15 +3,22 @@ package Model.services;
 import Model.cnx.Connexion;
 import Model.utilisateur.Utilisateur;
 import Model.serveur.Menu;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.Date;
 
-public class DAO {
+public class Dao {
+
+    public Dao(PrintWriter p) {
+        p.println("Bien");
+    }
     
     public boolean test_login(String username,String password) throws Exception
     { 
-        Utilisateur [] tab = find_all_user();
+        try
+        {
+            Utilisateur [] tab = find_all_user();
         for(int i = 0 ; i < tab.length; i ++)
         {
             System.out.println(tab[i].getUsername());
@@ -21,23 +28,35 @@ public class DAO {
             }
         }
         return false;
+        }catch(Exception e)
+        {
+            throw e ;
+        }
+        
     }
     
     public Utilisateur [] find_all_user() throws Exception
     {
         Utilisateur[] tab = null;
         try (Connection con = new Connexion().getConnection()) {
-            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
-            ResultSet res = stmt.executeQuery( "select * from user_info");
-            int i=0;
-            res.last();
-            tab = new Utilisateur[res.getRow()];
-            res.beforeFirst();
-            while(res.next())
+            try
             {
-                tab[i] = new Utilisateur(res.getInt("id"),res.getString("username"),res.getString("password"),res.getInt("id_profil"));
-                i++;
+                java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+                ResultSet res = stmt.executeQuery( "select * from user_info");
+                int i=0;
+                res.last();
+                tab = new Utilisateur[res.getRow()];
+                res.beforeFirst();
+                while(res.next())
+                {
+                    tab[i] = new Utilisateur(res.getInt("id"),res.getString("username"),res.getString("password"),res.getInt("id_profil"));
+                    i++;
+                }
+            }catch(Exception e)
+            {
+                throw e;
             }
+           
         }
         return tab;
     }
