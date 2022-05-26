@@ -1,3 +1,28 @@
+DROP VIEW detail_livraison;
+DROP VIEW livraison_client;
+DROP VIEW user_info;
+DROP VIEW addition_table;
+DROP VIEW addition_table_temp;
+DROP VIEW menu;
+
+DROP TABLE livraison;
+DROP TABLE utilisateur;
+DROP TABLE profil;
+DROP TABLE inventaire_produit;
+DROP TABLE inventaire_ingredient;
+DROP TABLE details_commande;
+DROP TABLE commande;
+DROP TABLE livreur;
+DROP TABLE stock_ingredient;
+DROP TABLE stock_produit;
+DROP TABLE recette;
+DROP TABLE prix_produit;
+DROP TABLE produit;
+DROP TABLE categorie;
+DROP TABLE prix_ingredient;
+DROP TABLE ingredient;
+DROP TABLE point_livraison;
+
 CREATE TABLE "point_livraison" (
   "id" SERIAL PRIMARY KEY,
   "designation" varchar,
@@ -74,7 +99,8 @@ CREATE TABLE "details_commande" (
   "id_commande" int,
   "id_produit" int,
   "id_serveur" int,
-  "etat" int
+  "etat" int,
+  "est_paye" int
 );
 
 CREATE TABLE "inventaire_ingredient" (
@@ -101,6 +127,14 @@ CREATE TABLE "utilisateur" (
   "username" varchar,
   "password" varchar,
   "id_profil" int
+);
+
+CREATE TABLE "livraison" (
+  "id" SERIAL PRIMARY KEY,
+  "numero" varchar,
+  "id_livreur" int references livreur(id),
+  "id_commande" int references commande(id),
+  "contact" varchar
 );
 
 ALTER TABLE "prix_ingredient" ADD FOREIGN KEY ("id_ingredient") REFERENCES "ingredient" ("id");
@@ -156,6 +190,20 @@ CREATE VIEW user_info AS
 select  u.*, p.nom as profil
         from utilisateur u
         join profil p on (p.id = u.id_profil);
+
+create view livraison_client as
+select	l.numero n_livraison, p.nom nom_produit, dc.id_produit
+		from livraison l
+		join commande c on (c.id = l.id_commande)
+		join details_commande dc on (dc.id_commande = c.id)
+		join produit p on (p.id = dc.id_produit);
+
+create view detail_livraison as
+select	l.numero n_livraison, p.nom nom_produit, dc.id_produit, dc.id id_detail_commande, dc.est_paye
+		from livraison l
+		join commande c on (c.id = l.id_commande)
+		join details_commande dc on (dc.id_commande = c.id)
+		join produit p on (p.id = dc.id_produit);
 
 
 INSERT INTO categorie VALUES
@@ -226,15 +274,15 @@ INSERT INTO commande VALUES
 (DEFAULT, '2022-03-28 12:46:27', 5);
 
 INSERT INTO details_commande VALUES
-(DEFAULT, 1, 1, 1, 3),
-(DEFAULT, 1, 1, 1, 3),
-(DEFAULT, 2, 1, 2, 3),
-(DEFAULT, 2, 3, 2, 3),
-(DEFAULT, 3, 1, 3, 3),
-(DEFAULT, 3, 4, 3, 3),
-(DEFAULT, 4, 2, 4, 3),
-(DEFAULT, 4, 3, 4, 3),
-(DEFAULT, 5, 5, 5, 3);
+(DEFAULT, 1, 1, 1, 3, 0),
+(DEFAULT, 1, 1, 1, 3, 0),
+(DEFAULT, 2, 1, 2, 3, 0),
+(DEFAULT, 2, 3, 2, 3, 0),
+(DEFAULT, 3, 1, 3, 3, 0),
+(DEFAULT, 3, 4, 3, 3, 0),
+(DEFAULT, 4, 2, 4, 3, 0),
+(DEFAULT, 4, 3, 4, 3, 0),
+(DEFAULT, 5, 5, 5, 3, 0);
 
 INSERT INTO commande VALUES
 (DEFAULT, '2022-03-26 10:46:27', 1),
@@ -244,15 +292,15 @@ INSERT INTO commande VALUES
 (DEFAULT, '2022-03-26 21:46:27', 5);
 
 INSERT INTO details_commande VALUES
-(DEFAULT, 6, 2, 1, 3),
-(DEFAULT, 6, 3, 1, 3),
-(DEFAULT, 7, 5, 2, 3),
-(DEFAULT, 7, 1, 2, 3),
-(DEFAULT, 8, 1, 3, 3),
-(DEFAULT, 8, 2, 3, 3),
-(DEFAULT, 9, 5, 4, 3),
-(DEFAULT, 9, 4, 4, 3),
-(DEFAULT, 10, 1, 5, 3);
+(DEFAULT, 6, 2, 1, 3, 0),
+(DEFAULT, 6, 3, 1, 3, 0),
+(DEFAULT, 7, 5, 2, 3, 0),
+(DEFAULT, 7, 1, 2, 3, 0),
+(DEFAULT, 8, 1, 3, 3, 0),
+(DEFAULT, 8, 2, 3, 3, 0),
+(DEFAULT, 9, 5, 4, 3, 0),
+(DEFAULT, 9, 4, 4, 3, 0),
+(DEFAULT, 10, 1, 5, 3, 0);
 
 INSERT INTO stock_ingredient VALUES
 (DEFAULT, 1, 'entree', 20, '2022-04-01 15:57:27'),
@@ -267,3 +315,10 @@ INSERT INTO stock_ingredient VALUES
 (DEFAULT, 3, 'sortie', 9, '2022-04-03 8:46:27'),
 (DEFAULT, 4, 'sortie', 17, '2022-04-04 7:46:27'),
 (DEFAULT, 5, 'sortie', 15, '2022-04-05 11:46:27');
+
+INSERT INTO livraison VALUES
+(DEFAULT, 'Livraison 001', 1, 1, '034 23 589 14'),
+(DEFAULT, 'Livraison 002', 2, 2, '034 32 690 15'),
+(DEFAULT, 'Livraison 003', 3, 3, '034 45 701 16'),
+(DEFAULT, 'Livraison 004', 4, 4, '034 75 812 17'),
+(DEFAULT, 'Livraison 005', 5, 5, '034 17 923 18');
