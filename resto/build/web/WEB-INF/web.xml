@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <servlet>
-        <servlet-name>ServletMenu</servlet-name>
-        <servlet-class>servlet.ServletMenu</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ServletFiltreMenu</servlet-name>
-        <servlet-class>servlet.ServletFiltreMenu</servlet-class>
+     <servlet>
+        <servlet-name>Authentification</servlet-name>
+        <servlet-class>Controllers.Authentification</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ServletMenu</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ServletFiltreMenu</servlet-name>
-        <url-pattern>/ServletFiltreMenu</url-pattern>
+        <servlet-name>Authentification</servlet-name>
+        <url-pattern>/Authentification</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
