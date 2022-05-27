@@ -1,3 +1,5 @@
+DROP VIEW reste_stock_produit;
+DROP VIEW reste_stock_ingredient;
 DROP VIEW plat_commande;
 DROP VIEW pourboire;
 DROP VIEW detail_livraison;
@@ -350,3 +352,35 @@ select  dc.id_produit, p.nom nom_produit, l.lieu, dc.etat, dc.id_serveur, c.date
         join commande c on (c.id = dc.id_commande)
         join produit p on (p.id = dc.id_produit)
         join livraison l on (l.id_commande = c.id);
+
+create view reste_stock_ingredient as
+select	entree.id_ingredient, entree.nom_ingredient, (entree.somme - sortie.somme) reste
+		from
+		(select	si.id_ingredient, i.nom nom_ingredient, sum(quantite) somme
+				from stock_ingredient si
+				join ingredient i on (i.id = si.id_ingredient)
+				where designation = 'entree'
+				group by si.id_ingredient, i.nom) entree
+		join
+		(select	si.id_ingredient, i.nom nom_ingredient, sum(quantite) somme
+				from stock_ingredient si
+				join ingredient i on (i.id = si.id_ingredient)
+				where designation = 'sortie'
+				group by si.id_ingredient, i.nom) sortie
+		on (entree.id_ingredient = sortie.id_ingredient);
+
+create view reste_stock_produit as
+select	entree.id_produit, entree.nom_produit, (entree.somme - sortie.somme) reste
+		from
+		(select	si.id_produit, i.nom nom_produit, sum(quantite) somme
+				from stock_produit si
+				join produit i on (i.id = si.id_produit)
+				where designation = 'entree'
+				group by si.id_produit, i.nom) entree
+		join
+		(select	si.id_produit, i.nom nom_produit, sum(quantite) somme
+				from stock_produit si
+				join produit i on (i.id = si.id_produit)
+				where designation = 'sortie'
+				group by si.id_produit, i.nom) sortie
+		on (entree.id_produit = sortie.id_produit);
