@@ -109,14 +109,14 @@ CREATE TABLE "details_commande" (
 CREATE TABLE "inventaire_ingredient" (
   "id" SERIAL PRIMARY KEY,
   "id_ingredient" int,
-  "quantite" double precision,
+  "qte" double precision,
   "date" timestamp
 );
 
 CREATE TABLE "inventaire_produit" (
   "id" SERIAL PRIMARY KEY,
   "id_produit" int,
-  "quantite" double precision,
+  "qte" double precision,
   "date" timestamp
 );
 
