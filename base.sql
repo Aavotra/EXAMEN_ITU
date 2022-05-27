@@ -51,7 +51,8 @@ CREATE TABLE "categorie" (
 CREATE TABLE "produit" (
   "id" SERIAL PRIMARY KEY,
   "id_categorie" int,
-  "nom" varchar
+  "nom" varchar,
+  "image" varchar
 );
 
 CREATE TABLE "prix_produit" (
@@ -215,11 +216,11 @@ INSERT INTO categorie VALUES
 (DEFAULT, 'Dessert');
 
 INSERT INTO produit VALUES
-(DEFAULT, 1, 'Pate a choux'),
-(DEFAULT, 2, 'Ravitoto sy henakisoa'),
-(DEFAULT, 3, 'Glace'),
-(DEFAULT, 3, 'Salade de fruit'),
-(DEFAULT, 3, 'Yaourt');
+(DEFAULT, 1, 'Pate a choux', null),
+(DEFAULT, 2, 'Ravitoto sy henakisoa', null),
+(DEFAULT, 3, 'Glace', null),
+(DEFAULT, 3, 'Salade de fruit', null),
+(DEFAULT, 3, 'Yaourt', null);
 
 INSERT INTO prix_produit VALUES
 (DEFAULT, 1, 2000, '2022-03-22'),
