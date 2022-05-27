@@ -8,8 +8,7 @@ import java.sql.ResultSet;
 
 public class Service {
 
-    public Service() {
-    }
+    public Service() { }
     
     void do_commande(int idtable) throws Exception
     {
@@ -33,9 +32,19 @@ public class Service {
         }
     }
     
-    int get_last_commande(Connexion c)
+    int get_last_commande(Connexion c) throws Exception
     {
-        return 0;
+        int max = 0 ;
+        try (Connection con = new Connexion().getConnection()) 
+        {
+            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            ResultSet res = stmt.executeQuery("select max(id) as max from  commande");
+            while(res.next())
+            {
+                max = res.getInt("max");
+            }
+        }
+        return max;
     }
     
     public Addition get_addition() throws Exception

@@ -4,6 +4,7 @@ import Model.cnx.Connexion;
 import Model.consommable.Produit;
 import Model.livreur.Details_livraison;
 import Model.livreur.Livraison;
+import Model.livreur.Plat_commander;
 import Model.utilisateur.Utilisateur;
 import Model.serveur.Menu;
 import java.io.PrintWriter;
@@ -17,8 +18,7 @@ public class Dao {
         p.println("Bien");
     }
 
-    public Dao() {
-          }
+    public Dao() {}
     
     public boolean test_login(String username,String password) throws Exception
     { 
@@ -98,11 +98,32 @@ public class Dao {
         
     }
     
-    /*Produit[] Get_liste_plats_commander(String date ,Connection c)
+    Plat_commander [] Get_liste_plats_commander(String date) throws Exception
     {
-        
-        return null;
-    }*/
+        Plat_commander[] tab = null;
+        try (Connection con = new Connexion().getConnection()) 
+        {
+            try
+            {
+                java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+                ResultSet res = stmt.executeQuery("select * from plat_commander where date='"+date+"'");
+                int i=0;
+                res.last();
+                tab = new Plat_commander[res.getRow()];
+                res.beforeFirst();
+                while(res.next())
+                {
+                    tab[i] = new Plat_commander(res.getInt("id_produit"), res.getString("nom_produit"), res.getString("lieu"), res.getInt("etat"),res.getInt("id_livreur"));
+                    i++;
+                }
+            }
+             catch(Exception e)
+            {
+                throw e;
+            }
+        }
+        return tab;
+    }
     
     public Livraison get_livraison () throws Exception
     {

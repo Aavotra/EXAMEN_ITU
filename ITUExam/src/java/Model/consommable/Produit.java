@@ -10,7 +10,8 @@ public class Produit {
     private int id_categorie;
     private String nom;
 
-    public Produit(int id, int id_categorie, String nom) {
+    public Produit(int id, int id_categorie, String nom) 
+    {
         this.id = id;
         this.id_categorie = id_categorie;
         this.nom = nom;

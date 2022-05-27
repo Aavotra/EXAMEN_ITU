@@ -6,6 +6,7 @@
 package Controllers;
 
 import Model.cnx.Connexion;
+import Model.livreur.Plat_commander;
 import Model.serveur.Addition;
 import Model.services.Service;
 import java.io.IOException;
@@ -18,28 +19,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author sony
- */
-public class Serveur extends HttpServlet {
+public class Serveur extends HttpServlet 
+{
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception 
+    {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            Addition a = addition_table(request.getParameter("table"));
-            request.setAttribute("addition", a);
-            RequestDispatcher rd=request.getRequestDispatcher("addition.jsp");  
-            rd.forward(request, response);
+        try (PrintWriter out = response.getWriter()) 
+        {
+            if(request.getParameter("action").equals("addition"))
+            {
+                Addition a = addition_table(request.getParameter("table"));
+                request.setAttribute("addition", a);
+                RequestDispatcher rd = request.getRequestDispatcher("addition.jsp");
+                rd.forward(request, response);
+            }
+            else if(request.getParameter("action").equals("plat_non_livre"))
+            {
+                
+            } 
         }
     }
     
@@ -81,6 +79,11 @@ public class Serveur extends HttpServlet {
         }
         a = new Addition(id_produit , id_commande , id_point_livraison , designation , nom_produit  , quantite ,   date_commande    , prix_unitaire , montant);
         return a;
+    }
+    
+    Plat_commander [] plat_non_livrer(String date)
+    {
+        
     }
             
 
