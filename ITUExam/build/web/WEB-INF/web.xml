@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-     <servlet>
+    <servlet>
         <servlet-name>Authentification</servlet-name>
         <servlet-class>Controllers.Authentification</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Livreur</servlet-name>
+        <servlet-class>Controllers.Livreur</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Serveur</servlet-name>
+        <servlet-class>Controllers.Serveur</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Authentification</servlet-name>
         <url-pattern>/Authentification</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Livreur</servlet-name>
+        <url-pattern>/Livreur</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Serveur</servlet-name>
+        <url-pattern>/Serveur</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -38,7 +38,7 @@ public class Service {
         return 0;
     }
     
-    Addition get_addition(Connexion c) throws Exception
+    public Addition get_addition() throws Exception
     {
         Addition a = null;
         try (Connection con = new Connexion().getConnection()) {

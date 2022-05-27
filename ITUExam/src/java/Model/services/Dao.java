@@ -2,6 +2,7 @@ package Model.services;
 
 import Model.cnx.Connexion;
 import Model.consommable.Produit;
+import Model.livreur.Details_livraison;
 import Model.livreur.Livraison;
 import Model.utilisateur.Utilisateur;
 import Model.serveur.Menu;
@@ -131,6 +132,37 @@ public class Dao {
             l = new Livraison(id , numero ,id_livreur , id_commande ,contact);
         }
         return l;  
+    }
+    
+    
+    public Details_livraison get_details_livraison () throws Exception
+    {
+        Details_livraison d = null;
+        try (Connection con = new Connexion().getConnection()) {
+            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            ResultSet res = stmt.executeQuery("select * from detail_livraison");
+            int i=0;
+            res.last();
+            
+            String [] n_livraison = new String [res.getRow()];    
+            String [] nom_produit = new String [res.getRow()];   
+            int [] id_produit = new int[res.getRow()];
+            int [] id_detail_commande = new int[res.getRow()];
+            int [] est_paye = new int[res.getRow()];
+            
+            res.beforeFirst();
+            while(res.next())
+            {
+                n_livraison [i] = res.getString(" n_livraison");   
+                nom_produit [i] = res.getString("nom_produit");   
+                id_produit [i] = res.getInt("id_produit");
+                id_detail_commande [i] = res.getInt("id_detail_commande");
+                est_paye [i] = res.getInt("est_paye");
+                i++;
+            }
+            d = new Details_livraison(n_livraison,nom_produit,id_produit,id_detail_commande,est_paye);
+        }
+        return d;  
     }
     
 }

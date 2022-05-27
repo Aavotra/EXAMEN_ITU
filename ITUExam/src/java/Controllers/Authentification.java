@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class Authentification extends HttpServlet 
 {
@@ -39,6 +40,8 @@ public class Authentification extends HttpServlet
                         out.println(tab[i].getPassword()+":"+request.getParameter("password"));
                         if(tab[i].getUsername() == request.getParameter("username") && tab[i].getPassword() == request.getParameter("password"))
                         {
+                            HttpSession session=request.getSession();  
+                            session.setAttribute("idUser",tab[i].getId());
                             if(tab[i].getId_profil() == 1)
                             {
                                 out.println("Hello1");
