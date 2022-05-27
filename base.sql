@@ -1,3 +1,4 @@
+DROP VIEW recette_detail;
 DROP VIEW reste_stock_produit;
 DROP VIEW reste_stock_ingredient;
 DROP VIEW plat_commande;
@@ -384,3 +385,9 @@ select	entree.id_produit, entree.nom_produit, (entree.somme - sortie.somme) rest
 				where designation = 'sortie'
 				group by si.id_produit, i.nom) sortie
 		on (entree.id_produit = sortie.id_produit);
+
+create view recette_detail as
+select	r.id, r.id_produit, p.nom nom_produit, i.nom nom_ingredient, r.quantite
+		from recette r
+		join produit p on (p.id = r.id_produit)
+		join ingredient i on (i.id = r.id_ingredient);
