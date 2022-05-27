@@ -1,3 +1,5 @@
+DROP VIEW plat_commande;
+DROP VIEW pourboire;
 DROP VIEW detail_livraison;
 DROP VIEW livraison_client;
 DROP VIEW user_info;
@@ -5,23 +7,23 @@ DROP VIEW addition_table;
 DROP VIEW addition_table_temp;
 DROP VIEW menu;
 
-DROP TABLE livraison;
-DROP TABLE utilisateur;
-DROP TABLE profil;
-DROP TABLE inventaire_produit;
-DROP TABLE inventaire_ingredient;
-DROP TABLE details_commande;
-DROP TABLE commande;
-DROP TABLE livreur;
-DROP TABLE stock_ingredient;
-DROP TABLE stock_produit;
-DROP TABLE recette;
-DROP TABLE prix_produit;
-DROP TABLE produit;
-DROP TABLE categorie;
-DROP TABLE prix_ingredient;
-DROP TABLE ingredient;
-DROP TABLE point_livraison;
+DROP TABLE livraison cascade;
+DROP TABLE utilisateur cascade;
+DROP TABLE profil cascade;
+DROP TABLE inventaire_produit cascade;
+DROP TABLE inventaire_ingredient cascade;
+DROP TABLE details_commande cascade;
+DROP TABLE commande cascade;
+-- DROP TABLE livreur cascade;
+DROP TABLE stock_ingredient cascade;
+DROP TABLE stock_produit cascade;
+DROP TABLE recette cascade;
+DROP TABLE prix_produit cascade;
+DROP TABLE produit cascade;
+DROP TABLE categorie cascade;
+DROP TABLE prix_ingredient cascade;
+DROP TABLE ingredient cascade;
+DROP TABLE point_livraison cascade;
 
 CREATE TABLE "point_livraison" (
   "id" SERIAL PRIMARY KEY,
@@ -82,11 +84,11 @@ CREATE TABLE "stock_ingredient" (
   "date" timestamp
 );
 
-CREATE TABLE "livreur" (
-  "id" SERIAL PRIMARY KEY,
-  "nom" varchar,
-  "categorie_livraison" varchar
-);
+-- CREATE TABLE "livreur" (
+--   "id" SERIAL PRIMARY KEY,
+--   "nom" varchar,
+--   "categorie_livraison" varchar
+-- );
 
 CREATE TABLE "commande" (
   "id" SERIAL PRIMARY KEY,
@@ -132,9 +134,10 @@ CREATE TABLE "utilisateur" (
 CREATE TABLE "livraison" (
   "id" SERIAL PRIMARY KEY,
   "numero" varchar,
-  "id_livreur" int references livreur(id),
+  "id_livreur" int references utilisateur(id),
   "id_commande" int references commande(id),
-  "contact" varchar
+  "contact" varchar,
+  "lieu" varchar
 );
 
 ALTER TABLE "prix_ingredient" ADD FOREIGN KEY ("id_ingredient") REFERENCES "ingredient" ("id");
@@ -157,7 +160,7 @@ ALTER TABLE "details_commande" ADD FOREIGN KEY ("id_commande") REFERENCES "comma
 
 ALTER TABLE "details_commande" ADD FOREIGN KEY ("id_produit") REFERENCES "produit" ("id");
 
-ALTER TABLE "details_commande" ADD FOREIGN KEY ("id_serveur") REFERENCES "livreur" ("id");
+ALTER TABLE "details_commande" ADD FOREIGN KEY ("id_serveur") REFERENCES "utilisateur" ("id");
 
 ALTER TABLE "inventaire_ingredient" ADD FOREIGN KEY ("id_ingredient") REFERENCES "ingredient" ("id");
 
@@ -252,12 +255,19 @@ INSERT INTO recette VALUES
 (DEFAULT, 4, 3, 1),
 (DEFAULT, 5, 1, 8);
 
-INSERT INTO livreur VALUES
-(DEFAULT, 'Rakoto', 'restaurant'),
-(DEFAULT, 'Aline', 'restaurant'),
-(DEFAULT, 'Rasoa', 'restaurant'),
-(DEFAULT, 'Rabe', 'restaurant'),
-(DEFAULT, 'Rajao', 'restaurant');
+INSERT INTO profil VALUES
+(DEFAULT, 'Admin'),
+(DEFAULT, 'Livreur'),
+(DEFAULT, 'Cuisine'),
+(DEFAULT, 'Serveur'),
+(DEFAULT, 'Caisse');
+
+INSERT INTO utilisateur VALUES
+(DEFAULT, 'Rakoto', 'Rakoto', 2),
+(DEFAULT, 'Aline', 'Aline', 2),
+(DEFAULT, 'Rasoa', 'Rasoa', 2),
+(DEFAULT, 'Rabe', 'Rabe', 2),
+(DEFAULT, 'Rajao', 'Rajao', 2);
 
 INSERT INTO point_livraison VALUES
 (DEFAULT, 'table 1', 'restaurant'),
@@ -317,8 +327,25 @@ INSERT INTO stock_ingredient VALUES
 (DEFAULT, 5, 'sortie', 15, '2022-04-05 11:46:27');
 
 INSERT INTO livraison VALUES
-(DEFAULT, 'Livraison 001', 1, 1, '034 23 589 14'),
-(DEFAULT, 'Livraison 002', 2, 2, '034 32 690 15'),
-(DEFAULT, 'Livraison 003', 3, 3, '034 45 701 16'),
-(DEFAULT, 'Livraison 004', 4, 4, '034 75 812 17'),
-(DEFAULT, 'Livraison 005', 5, 5, '034 17 923 18');
+(DEFAULT, 'Livraison 001', 1, 1, '034 23 589 14', 'Andoharanofotsy'),
+(DEFAULT, 'Livraison 002', 2, 2, '034 32 690 15', 'Andoharanofotsy'),
+(DEFAULT, 'Livraison 003', 3, 3, '034 45 701 16', 'Andoharanofotsy'),
+(DEFAULT, 'Livraison 004', 4, 4, '034 75 812 17', 'Andoharanofotsy'),
+(DEFAULT, 'Livraison 005', 5, 5, '034 17 923 18', 'Andoharanofotsy');
+
+
+create view pourboire as
+select	c.date_heure::date date, dc.id_serveur, sum(pp.montant * 0.01) montant
+        from details_commande dc
+        join produit p on (p.id = dc.id_produit)
+        join prix_produit pp on (pp.id_produit = p.id)
+        join commande c on (c.id = dc.id_commande)
+        where pp.date = (select max(date) from prix_produit where id_produit = p.id)
+        group by c.date_heure::date, dc.id_serveur;
+
+create view plat_commande as
+select  dc.id_produit, p.nom nom_produit, l.lieu, dc.etat, dc.id_serveur, c.date_heure date
+        from details_commande dc
+        join commande c on (c.id = dc.id_commande)
+        join produit p on (p.id = dc.id_produit)
+        join livraison l on (l.id_commande = c.id);
