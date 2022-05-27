@@ -1,3 +1,4 @@
+DROP VIEW pourboire;
 DROP VIEW detail_livraison;
 DROP VIEW livraison_client;
 DROP VIEW user_info;
@@ -329,3 +330,13 @@ INSERT INTO livraison VALUES
 (DEFAULT, 'Livraison 003', 3, 3, '034 45 701 16'),
 (DEFAULT, 'Livraison 004', 4, 4, '034 75 812 17'),
 (DEFAULT, 'Livraison 005', 5, 5, '034 17 923 18');
+
+
+create view pourboire as
+select	c.date_heure::date date, dc.id_serveur, sum(pp.montant * 0.01) montant
+        from details_commande dc
+        join produit p on (p.id = dc.id_produit)
+        join prix_produit pp on (pp.id_produit = p.id)
+        join commande c on (c.id = dc.id_commande)
+        where pp.date = (select max(date) from prix_produit where id_produit = p.id)
+        group by c.date_heure::date, dc.id_serveur;
