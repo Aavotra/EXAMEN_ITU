@@ -15,6 +15,15 @@ public class Menu {
     private double [] prix_produit;
     private String [] categorie;
 
+    public Menu(int[] id_produit, String[] nom_produit, double[] prix_produit, String[] categorie, String[] date) {
+        this.id_produit = id_produit;
+        this.nom_produit = nom_produit;
+        this.prix_produit = prix_produit;
+        this.categorie = categorie;
+        this.date = date;
+    }
+    private String [] date;
+
     public Menu(int[] id_produit, String[] nom_produit, double[] prix_produit, String[] categorie) {
         this.id_produit = id_produit;
         this.nom_produit = nom_produit;
@@ -52,6 +61,14 @@ public class Menu {
 
     public void setPrix_produit(double[] prix_produit) {
         this.prix_produit = prix_produit;
+    }
+
+    public String[] getDate() {
+        return date;
+    }
+
+    public void setDate(String[] date) {
+        this.date = date;
     }
     
 }

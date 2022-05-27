@@ -5,9 +5,11 @@
  */
 package Main;
 
+import Model.serveur.Menu;
 import Model.services.Dao;
 import Model.utilisateur.Utilisateur;
 import java.sql.Connection;
+import java.util.Calendar;
 
 /**
  *
@@ -17,12 +19,13 @@ public class test {
     
     public static void main(String [] args) throws Exception
     {
-    
-           /* Dao d = new Dao();
-            Utilisateur [] tab = d.find_all_user();
+            Dao d = new Dao();
+            /*Utilisateur [] tab = d.find_all_user();
             for(int i = 0 ; i < tab.length; i ++)
             {
                 System.out.println(tab[i].getUsername());
             }*/
+            Menu m = d.get_menu();
+            System.out.println(m.getDate()[0]);
     }
 }

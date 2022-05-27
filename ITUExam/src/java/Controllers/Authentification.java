@@ -13,10 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author sony
- */
 public class Authentification extends HttpServlet 
 {
 
@@ -33,21 +29,25 @@ public class Authentification extends HttpServlet
                 out.println(request.getParameter("username"));
                 out.println(request.getParameter("password"));
                 
-                if(d.test_login(request.getParameter("username"),request.getParameter("password"))==true)
+                if(d.test_login(request.getParameter("username"),request.getParameter("password")))
                 {
                     out.println("Hello");
                     Utilisateur [] tab = d.find_all_user();
                     for(int i = 0 ; i < tab.length; i ++)
                     {
+                        out.println(tab[i].getUsername()+":"+request.getParameter("username"));
+                        out.println(tab[i].getPassword()+":"+request.getParameter("password"));
                         if(tab[i].getUsername() == request.getParameter("username") && tab[i].getPassword() == request.getParameter("password"))
                         {
                             if(tab[i].getId_profil() == 1)
                             {
+                                out.println("Hello1");
                                 RequestDispatcher rd=request.getRequestDispatcher("accueil_serveur.jsp");  
                                 rd.forward(request, response);
                             }
                             else if (tab[i].getId_profil() == 2)
                             {
+                                out.println("Hello2");
                                 RequestDispatcher rd=request.getRequestDispatcher("accueil_cuisine.jsp");  
                                 rd.forward(request, response);
                             }
@@ -71,15 +71,14 @@ public class Authentification extends HttpServlet
                 }
                 else
                 {
-                    out.println("Coucou");
                    RequestDispatcher rd=request.getRequestDispatcher("login.jsp");  
                    rd.forward(request, response);
                 }
             }catch(Exception e)
             {
-                //out.println(request.getParameter("username"));
-                //out.println(request.getParameter("password"));
-                 out.println("Coucou");
+                out.println(request.getParameter("username"));
+                out.println(request.getParameter("password"));
+                out.println("Coucou");
                 out.println(e);
                 e.printStackTrace();
             }
