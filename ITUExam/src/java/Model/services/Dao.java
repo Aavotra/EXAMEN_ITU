@@ -2,6 +2,7 @@ package Model.services;
 
 import Model.cnx.Connexion;
 import Model.consommable.Produit;
+import Model.livreur.Livraison;
 import Model.utilisateur.Utilisateur;
 import Model.serveur.Menu;
 import java.io.PrintWriter;
@@ -96,10 +97,40 @@ public class Dao {
         
     }
     
-    Produit[] Get_liste_plats_commander(String date ,Connection c)
+    /*Produit[] Get_liste_plats_commander(String date ,Connection c)
     {
         
         return null;
+    }*/
+    
+    public Livraison get_livraison () throws Exception
+    {
+        Livraison l = null;
+        try (Connection con = new Connexion().getConnection()) {
+            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            ResultSet res = stmt.executeQuery("select * from livraison");
+            int i=0;
+            res.last();
+            
+            int [] id = new int[res.getRow()];
+            String [] numero = new String [res.getRow()];
+            int [] id_livreur = new int[res.getRow()];
+            int [] id_commande = new int[res.getRow()];  
+            String [] contact = new String [res.getRow()];
+            res.beforeFirst();
+            while(res.next())
+            {
+                id [i] = res.getInt("id");
+                numero [i] = res.getString("numero");
+                id_livreur [i] = res.getInt("id_livreur");
+                id_commande [i] = res.getInt("id_commande"); 
+                contact [i] = res.getString("contact");
+            
+                i++;
+            }
+            l = new Livraison(id , numero ,id_livreur , id_commande ,contact);
+        }
+        return l;  
     }
     
 }
