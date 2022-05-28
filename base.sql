@@ -173,7 +173,7 @@ ALTER TABLE "inventaire_produit" ADD FOREIGN KEY ("id_produit") REFERENCES "prod
 ALTER TABLE "utilisateur" ADD FOREIGN KEY ("id_profil") REFERENCES "profil" ("id");
 
 CREATE VIEW menu AS
-SELECT  p.id as id_produit, p.nom as produit, c.nom as categorie, pp.montant as prix, pp.date
+SELECT  p.id as id_produit, p.nom as produit, c.nom as categorie, pp.montant as prix, pp.date, p.image
         FROM produit p
         JOIN prix_produit pp ON( pp.id_produit=p.id)
         JOIN categorie c ON (c.id=p.id_categorie)
