@@ -1,3 +1,4 @@
+DROP VIEW about_commande;
 DROP VIEW recette_detail;
 DROP VIEW reste_stock_produit;
 DROP VIEW reste_stock_ingredient;
@@ -393,3 +394,9 @@ select	r.id, r.id_produit, p.nom nom_produit, i.nom nom_ingredient, r.quantite, 
 		join ingredient i on (i.id = r.id_ingredient)
 		join prix_ingredient pi on (pi.id_ingredient = i.id)
 		where pi.date = (select max(date) from prix_ingredient where id_ingredient = i.id);
+
+create view about_commande as
+select	c.id id_commande, c.id_table, dc.id id_detail_commande, dc.id_produit, p.nom nom_produit, dc.id_serveur, dc.etat, dc.est_paye, c.date_heure
+		from details_commande dc
+		join commande c on (c.id = dc.id_commande)
+		join produit p on (p.id = dc.id_produit);
