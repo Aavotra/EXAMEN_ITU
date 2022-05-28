@@ -387,7 +387,9 @@ select	entree.id_produit, entree.nom_produit, (entree.somme - sortie.somme) rest
 		on (entree.id_produit = sortie.id_produit);
 
 create view recette_detail as
-select	r.id, r.id_produit, p.nom nom_produit, i.nom nom_ingredient, r.quantite
+select	r.id, r.id_produit, p.nom nom_produit, i.nom nom_ingredient, r.quantite, pi.montant
 		from recette r
 		join produit p on (p.id = r.id_produit)
-		join ingredient i on (i.id = r.id_ingredient);
+		join ingredient i on (i.id = r.id_ingredient)
+		join prix_ingredient pi on (pi.id_ingredient = i.id)
+		where pi.date = (select max(date) from prix_ingredient where id_ingredient = i.id);
