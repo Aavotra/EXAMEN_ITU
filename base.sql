@@ -149,7 +149,8 @@ CREATE TABLE "livraison" (
 CREATE TABLE "paiement" (
   "id_detail_commande" int references details_commande(id),
   "type_paiement" varchar,
-  "date_paiement" timestamp
+  "date_paiement" timestamp,
+  "montant" double precision
 );
 
 ALTER TABLE "prix_ingredient" ADD FOREIGN KEY ("id_ingredient") REFERENCES "ingredient" ("id");
@@ -407,3 +408,7 @@ select	c.id id_commande, c.id_table, dc.id id_detail_commande, dc.id_produit, p.
 		from details_commande dc
 		join commande c on (c.id = dc.id_commande)
 		join produit p on (p.id = dc.id_produit);
+
+-- update details_commande set etat=0 where id in (
+-- 	select id_detail_commande from paiement
+-- );
