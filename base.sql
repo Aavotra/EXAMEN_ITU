@@ -11,6 +11,7 @@ DROP VIEW addition_table;
 DROP VIEW addition_table_temp;
 DROP VIEW menu;
 
+DROP TABLE paiement cascade;
 DROP TABLE livraison cascade;
 DROP TABLE utilisateur cascade;
 DROP TABLE profil cascade;
@@ -143,6 +144,12 @@ CREATE TABLE "livraison" (
   "id_commande" int references commande(id),
   "contact" varchar,
   "lieu" varchar
+);
+
+CREATE TABLE "paiement" (
+  "id_detail_commande" int references details_commande(id),
+  "type_paiement" varchar,
+  "date_paiement" timestamp
 );
 
 ALTER TABLE "prix_ingredient" ADD FOREIGN KEY ("id_ingredient") REFERENCES "ingredient" ("id");
