@@ -194,8 +194,8 @@ SELECT  p.id id_produit, c.id id_commande, c.id_table id_point_livraison, t.desi
         JOIN details_commande dc ON (dc.id_produit = p.id)
         JOIN commande c ON (c.id = dc.id_commande)
         JOIN point_livraison t ON (t.id = c.id_table)
-        -- WHERE c.date_heure = (select max(date_heure) from Commande)
-        GROUP BY p.id, c.id, c.id_table, t.designation, p.nom;
+        GROUP BY p.id, c.id, c.id_table, t.designation, p.nom
+		    HAVING  c.date_heure in (select max(date_heure) from commande group by id_table);
 
 CREATE VIEW addition_table AS
 SELECT  a.*, m.prix prix_unitaire, a.quantite*m.prix montant
