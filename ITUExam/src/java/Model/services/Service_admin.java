@@ -119,7 +119,6 @@ public class Service_admin
         return tab;
     }
     
-    
     public double reste_stock_produit(int id) throws Exception
     {
         double reste = 0;
@@ -213,6 +212,37 @@ public class Service_admin
             System.out.println(req);
             con.commit();
         }
+    }
+    
+    
+    public int get_prix_revient(int idproduit) throws Exception
+    {
+        int sum = 0;
+        try (Connection con = new Connexion().getConnection()) 
+        {
+            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            ResultSet res = stmt.executeQuery("select sum(quantite*montant) from recette_detail where id_produit="+idproduit+"");
+            while(res.next())
+            {
+                sum = res.getInt("sum");
+            }
+        }
+        return sum;
+    }
+    
+    public int propose_prix_vente(int idproduit,int marge) throws Exception
+    {
+        int sum = 0;
+        try (Connection con = new Connexion().getConnection()) 
+        {
+            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            ResultSet res = stmt.executeQuery("select sum(quantite*montant)+(sum(quantite*montant)*"+marge+") as sum from recette_detail where id_produit="+idproduit+"");
+            while(res.next())
+            {
+                sum = res.getInt("sum");
+            }
+        }
+        return sum;
     }
     
 }

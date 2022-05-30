@@ -1,7 +1,6 @@
 package Model.services;
 
 import Model.cnx.Connexion;
-import Model.consommable.Produit;
 import Model.livreur.Details_livraison;
 import Model.livreur.Livraison;
 import Model.serveur.Plat_commander;
