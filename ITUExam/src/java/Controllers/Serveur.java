@@ -76,8 +76,8 @@ public class Serveur extends HttpServlet
             request.setAttribute("menu", menu);
             request.setAttribute("non_livre", non_livre);
             request.setAttribute("cuit",cuit);
-           // RequestDispatcher rd = request.getRequestDispatcher("accueil_serveur.jsp");
-            //rd.forward(request, response);
+            RequestDispatcher rd = request.getRequestDispatcher("accueil_serveur.jsp");
+            rd.forward(request, response);
         }
     }
     
