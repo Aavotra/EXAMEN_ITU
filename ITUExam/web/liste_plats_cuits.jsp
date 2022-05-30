@@ -22,17 +22,6 @@
 <script type="text/javascript" src="js/Forum_400.font.js"></script>
 <script type="text/javascript" src="js/atooltip.jquery.js"></script> 
  <script type="text/javascript" src="js/css3-mediaqueries.js"></script>
-<!--[if lt IE 9]>
-	<script type="text/javascript" src="js/html5.js"></script>
-	<style type="text/css">
-		.slider_bg {behavior:url(js/PIE.htc)}
-	</style>
-<![endif]-->
-<!--[if lt IE 7]>
-	<div style='clear:both;text-align:center;position:relative'>
-		<a href="http://www.microsoft.com/windows/internet-explorer/default.aspx?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" alt="" /></a>
-	</div>
-<![endif]-->
 </head>
 <body id="page2">
 <div class="body6">

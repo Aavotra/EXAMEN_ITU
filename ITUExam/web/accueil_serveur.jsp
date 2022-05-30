@@ -1,5 +1,7 @@
 <%@page import="Model.services.Dao"%>
 <%@page import="Model.serveur.Menu"%>
+<%@ page session="true" %>
+<% out.println(request.getSession().getAttribute("idProfil")); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,9 +43,6 @@
 								<li><a href="Wine.html">Plats non livrés</a></li>
 								<li><a href="CookBook.html">Plats cuits</a></li>
 								<li><a href="CookBook.html">Addition</a></li>
-								
-								
-								
 							</ul>
 						</nav>
 					</div>

@@ -1,36 +1,36 @@
-package Model.livreur;
+package Model.serveur;
 
 public class Plat_commander {
     private int id_produit;
     private String nom_produit;
     private String lieu;
     private int etat ;
-    private int id_livreur;
+    private int id_serveur;
     private String date;
 
-    public Plat_commander(int id_produit, String nom_produit, String lieu, int etat, int id_livreur, String date) {
+    public Plat_commander(int id_produit, String nom_produit, String lieu, int etat, int id_serveur, String date) {
         this.id_produit = id_produit;
         this.nom_produit = nom_produit;
         this.lieu = lieu;
         this.etat = etat;
-        this.id_livreur = id_livreur;
+        this.id_serveur = id_serveur;
         this.date = date;
     }
 
-    public Plat_commander(int id_produit, String nom_produit, String lieu, int etat, int id_livreur) {
+    public Plat_commander(int id_produit, String nom_produit, String lieu, int etat, int id_serveur) {
         this.id_produit = id_produit;
         this.nom_produit = nom_produit;
         this.lieu = lieu;
         this.etat = etat;
-        this.id_livreur = id_livreur;
+        this.id_serveur = id_serveur;
     }
 
     public int getId_livreur() {
-        return id_livreur;
+        return id_serveur;
     }
 
-    public void setId_livreur(int id_livreur) {
-        this.id_livreur = id_livreur;
+    public void setId_livreur(int id_serveur) {
+        this.id_serveur = id_serveur;
     }
 
     public int getId_produit() {

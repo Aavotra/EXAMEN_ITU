@@ -1,5 +1,6 @@
 <%@page import="Model.services.Dao"%>
 <%@page import="Model.serveur.Menu"%>
+<% out.println(request.getSession().getAttribute("idProfil")); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>

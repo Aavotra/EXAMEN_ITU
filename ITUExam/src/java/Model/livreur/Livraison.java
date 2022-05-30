@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Model.livreur;
 
 /**
@@ -16,13 +11,15 @@ public class Livraison {
     private int [] id_livreur ; 
     private int [] id_commande ;    
     private String [] contact ;
+    private String [] lieu ;
 
-    public Livraison(int[] id, String[] numero, int[] id_livreur, int[] id_commande, String[] contact) {
+    public Livraison(int[] id, String[] numero, int[] id_livreur, int[] id_commande, String[] contact, String[] lieu) {
         this.id = id;
         this.numero = numero;
         this.id_livreur = id_livreur;
         this.id_commande = id_commande;
         this.contact = contact;
+        this.lieu = lieu;
     }
 
     public int[] getId() {
@@ -63,6 +60,14 @@ public class Livraison {
 
     public void setContact(String[] contact) {
         this.contact = contact;
+    }
+
+    public String[] getLieu() {
+        return lieu;
+    }
+
+    public void setLieu(String[] lieu) {
+        this.lieu = lieu;
     }
 
     

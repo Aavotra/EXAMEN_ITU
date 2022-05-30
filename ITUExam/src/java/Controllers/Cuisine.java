@@ -1,9 +1,11 @@
 package Controllers;
 
-import Model.livreur.Livraison;
+import Model.serveur.Addition;
+import Model.serveur.Menu;
 import Model.serveur.Plat_commander;
+import Model.services.Dao;
 import Model.services.Service_cuisine;
-import Model.services.Service_livreur;
+import Model.services.Service_serveur;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -12,31 +14,26 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author sony
- */
-public class Livreur extends HttpServlet {
+public class Cuisine extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) 
-        {
-            Service_livreur s = new Service_livreur();
-            Livraison l = null ;
-            HttpSession session=request.getSession(); 
-            if (session.getAttribute("id_livreur")!=null)
+        try (PrintWriter out = response.getWriter()) {
+            Service_cuisine s = new Service_cuisine();
+            Plat_commander [] prepare = null;
+            if (request.getParameter("d_prepare1")!= null && request.getParameter("d_prepare2")!=null)
             {
-                l = s.get_livraison((int) session.getAttribute("id_livreur"));
+                prepare = s.Get_liste_plats_preparer(request.getParameter("d_non_livre1").replaceAll("T"," ")+":00",request.getParameter("d_non_livre2").replaceAll("T"," ")+":00");
+                    
             }
             else 
             {
-                response.sendRedirect("index.jsp");
+                prepare = s.Get_all_liste_plats_preparer();
+                
             }
            
-            request.setAttribute("prepare",l);
+            request.setAttribute("prepare", prepare);
            // RequestDispatcher rd = request.getRequestDispatcher("accueil_serveur.jsp");
             //rd.forward(request, response);
         }
@@ -57,7 +54,7 @@ public class Livreur extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(Livreur.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Cuisine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -75,7 +72,7 @@ public class Livreur extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(Livreur.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Cuisine.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

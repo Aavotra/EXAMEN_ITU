@@ -1,7 +1,7 @@
 package Controllers;
 
 import Model.services.Dao;
-import Model.services.Service;
+import Model.services.Service_serveur;
 import Model.utilisateur.Utilisateur;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,49 +24,44 @@ public class Authentification extends HttpServlet
         {   
             try
             {
-                out.println(request.getParameter("username"));
-                out.println(request.getParameter("password"));
                 Dao d = new Dao(out);
                 out.println(request.getParameter("username"));
-                out.println(request.getParameter("password"));
-                
                 if(d.test_login(request.getParameter("username"),request.getParameter("password")))
                 {
-                    out.println("Hello");
                     Utilisateur [] tab = d.find_all_user();
                     for(int i = 0 ; i < tab.length; i ++)
                     {
-                        out.println(tab[i].getUsername()+":"+request.getParameter("username"));
-                        out.println(tab[i].getPassword()+":"+request.getParameter("password"));
                         if(tab[i].getUsername().equals(request.getParameter("username")) && tab[i].getPassword().equals(request.getParameter("password")))
                         {
-                            out.println("Hello1");
                             HttpSession session=request.getSession();  
-                            session.setAttribute("idUser",tab[i].getId());
+                            session.setAttribute("idProfil",tab[i].getId());
                             if(tab[i].getId_profil() == 1)
                             {
-                                out.println("Hello1");
-                                RequestDispatcher rd=request.getRequestDispatcher("accueil_serveur.jsp");  
+                                session.setAttribute("idProfil",tab[i].getId_profil());
+                                RequestDispatcher rd=request.getRequestDispatcher("accueil_admin.jsp");  
                                 rd.forward(request, response);
                             }
                             else if (tab[i].getId_profil() == 2)
                             {
-                                out.println("Hello2");
-                                RequestDispatcher rd=request.getRequestDispatcher("accueil_cuisine.jsp");  
+                                session.setAttribute("idProfil",tab[i].getId_profil());
+                                RequestDispatcher rd=request.getRequestDispatcher("accueil_livreur.jsp");  
                                 rd.forward(request, response);
                             }
                             else if (tab[i].getId_profil() == 3)
                             {
-                                RequestDispatcher rd=request.getRequestDispatcher("accueil_livreur.jsp");  
+                                session.setAttribute("idProfil",tab[i].getId_profil());
+                                RequestDispatcher rd=request.getRequestDispatcher("accueil_cuisine.jsp");  
                                 rd.forward(request, response);
                             }
                             else if (tab[i].getId_profil() == 4)
                             {
-                                RequestDispatcher rd=request.getRequestDispatcher("accueil_admin.jsp");  
+                                session.setAttribute("idProfil",tab[i].getId_profil());
+                                RequestDispatcher rd=request.getRequestDispatcher("/Serveur");  
                                 rd.forward(request, response);
                             }
                             else 
                             {
+                                session.setAttribute("idProfil",tab[i].getId_profil());
                                 RequestDispatcher rd=request.getRequestDispatcher("accueil_caisse.jsp");  
                                 rd.forward(request, response);
                             }
@@ -75,15 +70,11 @@ public class Authentification extends HttpServlet
                 }
                 else
                 {
-                   RequestDispatcher rd=request.getRequestDispatcher("login.jsp");  
+                   RequestDispatcher rd=request.getRequestDispatcher("index.jsp");  
                    rd.forward(request, response);
                 }
             }catch(Exception e)
             {
-                out.println(request.getParameter("username"));
-                out.println(request.getParameter("password"));
-                out.println("Coucou");
-                out.println(e);
                 e.printStackTrace();
             }
             

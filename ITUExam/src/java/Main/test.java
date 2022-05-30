@@ -25,7 +25,7 @@ public class test {
             {
                 System.out.println(tab[i].getUsername());
             }*/
-            Menu m = d.get_menu();
-            System.out.println(m.getDate()[0]);
+            //Menu m = d.get_menu();
+            //System.out.println(m.getDate()[0]);
     }
 }

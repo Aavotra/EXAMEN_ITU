@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Controllers;
 
 import Model.cnx.Connexion;
-import Model.livreur.Plat_commander;
+import Model.serveur.Plat_commander;
 import Model.serveur.Addition;
-import Model.services.Service;
+import Model.serveur.Menu;
+import Model.services.Dao;
+import Model.services.Service_serveur;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -21,71 +18,69 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Serveur extends HttpServlet 
 {
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception 
     {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) 
         {
-            if(request.getParameter("action").equals("addition"))
-            {
-                Addition a = addition_table(request.getParameter("table"));
-                request.setAttribute("addition", a);
-                RequestDispatcher rd = request.getRequestDispatcher("addition.jsp");
-                rd.forward(request, response);
-            }
-            else if(request.getParameter("action").equals("plat_non_livre"))
-            {
-                
-            } 
-        }
-    }
-    
-    public Addition addition_table(String design) throws Exception
-    {
-        Service s = new Service();
-        Addition a = s.get_addition();
-        int cpt = 0 ; 
-        for(int i = 0 ; i < a.getDate_commande().length ; i ++)
-        {
-            if(a.getDesignation().equals(design))
-            {
-                cpt++;
-            }
-        }
-        int [] id_produit = new int[cpt];
-        int [] id_commande = new int[cpt];
-        int [] id_point_livraison = new int[cpt]; 
-        String []  designation = new String[cpt] ;
-        String []  nom_produit = new String[cpt] ;
-        int [] quantite = new int[cpt] ;
-        String []  date_commande = new String[cpt] ;
-        int [] prix_unitaire = new int[cpt];
-        int [] montant = new int[cpt];
-        for(int i = 0 ; i < a.getDate_commande().length ; i ++)
-        {
-            if(a.getDesignation()[i].equals(design))
-            {
-                id_produit [i]= a.getId_produit()[i];
-                id_commande [i] = a.getId_commande()[i];
-                id_point_livraison [i] = a.getId_point_livraison()[i]; 
-                designation [i] = a.getDesignation()[i] ;
-                nom_produit[i] = a.getNom_produit()[i] ;
-                quantite[i] = a.getQuantite()[i] ;
-                date_commande[i] = a.getDate_commande()[i] ;
-                prix_unitaire[i] = a.getPrix_unitaire()[i];
-                montant[i] = a.getMontant()[i];
-            }
-        }
-        a = new Addition(id_produit , id_commande , id_point_livraison , designation , nom_produit  , quantite ,   date_commande    , prix_unitaire , montant);
-        return a;
-    }
-    
-    Plat_commander [] plat_non_livrer(String date)
-    {
-        Plat_commander [] = 
-    }
+            Addition tab = null;
+            Menu menu = null;
+            Service_serveur s = new Service_serveur();
+            Dao d = new Dao();
+            Plat_commander [] non_livre = null;
+            Plat_commander [] cuit = null;
             
+            if (request.getParameter("table")!=null)
+            {
+                tab = s.get_addition(request.getParameter("table"));
+            }
+            else 
+            {
+                tab = s.get_all_addition();
+            }
+            
+            if (request.getParameter("categorie")!=null)
+            {
+                menu = s.get_menu(request.getParameter("categorie"));
+                out.println(menu.getImage().length);
+            }
+            else 
+            {
+                menu = s.get_all_menu();
+                out.println(menu.getImage().length);
+            }
+            
+            if (request.getParameter("d_non_livre1")!= null && request.getParameter("d_non_livre2")!=null)
+            {
+                    non_livre = s.Get_liste_plats_commander(request.getParameter("d_non_livre1").replaceAll("T"," ")+":00",request.getParameter("d_non_livre2").replaceAll("T"," ")+":00");
+                    out.println(non_livre.length); 
+            }
+            else 
+            {
+                non_livre = s.Get_all_liste_plats_commander();
+                out.println(non_livre.length);
+            }
+            
+            if (request.getParameter("d_cuit1")!= null && request.getParameter("d_cuit")!=null)
+            {
+                    cuit = s.Get_liste_plats_cuit(request.getParameter("d_cuit1").replaceAll("T"," ")+":00",request.getParameter("d_cuit2").replaceAll("T"," ")+":00");
+                    out.println(non_livre.length); 
+            }
+            else 
+            {
+                non_livre = s.Get_all_liste_plats_cuit();
+                out.println(non_livre.length);
+            }
+            
+            request.setAttribute("addition", tab);
+            request.setAttribute("menu", menu);
+            request.setAttribute("non_livre", non_livre);
+            request.setAttribute("cuit",cuit);
+           // RequestDispatcher rd = request.getRequestDispatcher("accueil_serveur.jsp");
+            //rd.forward(request, response);
+        }
+    }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
