@@ -7,6 +7,8 @@ import Model.serveur.Plat_commander;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import Model.admin.Recette_detail;
+import Model.admin.Table;
+import Model.serveur.Addition;
 
 public class Service_admin 
 {
@@ -108,6 +110,33 @@ public class Service_admin
                 while(res.next())
                 {
                     tab[i] = new Recette_detail(res.getInt("id"),res.getInt("id_produit"),res.getString("nom_produit"),res.getString("nom_ingredient"),res.getInt("quantite"),res.getInt("montant"));
+                    i++;
+                }
+            }
+             catch(Exception e)
+            {
+                throw e;
+            }
+        }
+        return tab;
+    }
+    
+    public Table [] get_all_table(int idProduit) throws Exception
+    {
+        Table [] tab = null;
+        try (Connection con = new Connexion().getConnection()) 
+        {
+            try
+            {
+                java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+                ResultSet res = stmt.executeQuery("select * from point_livraison");
+                int i=0;
+                res.last();
+                tab = new Table[res.getRow()];
+                res.beforeFirst();
+                while(res.next())
+                {
+                    tab[i] = new Table(res.getInt("id"),res.getString("designation"));
                     i++;
                 }
             }
@@ -244,5 +273,49 @@ public class Service_admin
         }
         return sum;
     }
+    
+    
+    public Addition get_addition_par_table(int idtable) throws Exception
+    {
+        
+        Addition a = null;
+        try (Connection con = new Connexion().getConnection()) {
+            System.out.println("Hello");
+            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            ResultSet res = stmt.executeQuery("select * from addition_table where  id_point_livraison='"+idtable+"'");
+            int i=0;
+            res.last();
+            int [] id_produit = new int[res.getRow()];
+            int [] id_commande = new int[res.getRow()];
+            int [] id_point_livraison = new int[res.getRow()]; 
+            String []  designation = new String [res.getRow()];
+            String []  nom_produit = new String [res.getRow()];
+            int [] quantite = new int[res.getRow()];
+            String []  date_commande = new String [res.getRow()];
+            int [] prix_unitaire = new int[res.getRow()];
+            int [] montant = new int[res.getRow()];
+            res.beforeFirst();
+            while(res.next())
+            {
+                id_produit[i] = res.getInt("id_produit");
+                id_commande[i] = res.getInt("id_commande");
+                id_point_livraison[i] = res.getInt("id_point_livraison");
+                designation[i] = res.getString("designation");
+                nom_produit[i] = res.getString("nom_produit");
+                quantite[i] = res.getInt("quantite");
+                date_commande[i] = res.getString("date_commande");
+                prix_unitaire[i] = res.getInt("prix_unitaire");
+                montant[i] = res.getInt("montant");
+                i++;
+            }
+            a = new Addition(id_produit , id_commande , id_point_livraison , designation , nom_produit  , quantite ,date_commande  , prix_unitaire , montant);
+        }
+        catch(Exception e)
+        {
+           System.out.println(e);
+        }
+        return a; 
+    }
+    
     
 }
