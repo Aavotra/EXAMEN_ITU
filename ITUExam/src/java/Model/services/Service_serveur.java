@@ -3,6 +3,7 @@ package Model.services;
 import Model.admin.Pourboire;
 import Model.cnx.Connexion;
 import Model.serveur.Addition;
+import Model.serveur.Last_detail_commande;
 import Model.serveur.Menu;
 import Model.serveur.Plat_commander;
 import Model.utilisateur.Utilisateur;
@@ -13,7 +14,8 @@ public class Service_serveur {
 
     public Service_serveur() { }
     
-    void do_commande(int idtable) throws Exception
+    
+    public void do_commande(int idtable) throws Exception
     {
         try (Connection con = new Connexion().getConnection()) {
             java.sql.Statement stmt = con.createStatement();
@@ -24,11 +26,11 @@ public class Service_serveur {
         }
     }
     
-    void commander_produit(int id_serveur , int id_commande , int id_produit) throws Exception
+    public void commander_produit(int id_serveur , int id_commande , int id_produit) throws Exception
     {
         try (Connection con = new Connexion().getConnection()) {
             java.sql.Statement stmt = con.createStatement();
-            String req = String.format("insert into details_commande values(default,"+id_commande+","+id_produit+","+id_serveur+",1)");
+            String req = String.format("insert into details_commande values(default,"+id_commande+","+id_produit+","+id_serveur+",1,0)");
             stmt.executeUpdate(req);
             System.out.println(req);
             con.commit();
@@ -337,6 +339,64 @@ public class Service_serveur {
             }
         }
         return tab;
+    }
+    
+    
+    
+    public int get_last_commande() throws Exception
+    {
+        int max = 0;
+        try (Connection con = new Connexion().getConnection()) 
+        {
+            java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            ResultSet res = stmt.executeQuery("select max(id) as max from commande");
+            while(res.next())
+            {
+                max = res.getInt("max");
+            }
+        }
+        return max;
+    }
+    
+    public Last_detail_commande [] get_last_detail() throws Exception
+    {
+        Last_detail_commande [] tab = null;
+        try (Connection con = new Connexion().getConnection()) {
+            try
+            {
+                java.sql.Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+                
+                String reqa="select dc.id as id,nom,count(nom) from details_commande dc join produit on produit.id = dc.id_produit where id_commande in ( select max(commande.id) from commande) group by nom,dc.id";
+                               System.out.println(reqa);
+
+                ResultSet res = stmt.executeQuery(reqa);
+                int i=0;
+                res.last();
+                tab = new Last_detail_commande[res.getRow()];
+                res.beforeFirst();
+                while(res.next())
+                {
+                    tab[i] = new Last_detail_commande(res.getInt("id"),res.getString("nom"),res.getInt("count"));
+                    i++;
+                }
+            }catch(Exception e)
+            {
+                System.out.println(e);
+                throw e;
+            }
+        }
+        return tab;
+    }
+    
+    public void delete_detail_commande (int id) throws Exception
+    {
+        try (Connection con = new Connexion().getConnection()) {
+            java.sql.Statement stmt = con.createStatement();
+            String req = String.format("delete from  details_commande where id="+id+"");
+            stmt.executeUpdate(req);
+            System.out.println(req);
+            con.commit();
+        }
     }
     
 }
