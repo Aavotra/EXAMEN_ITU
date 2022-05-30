@@ -1,5 +1,5 @@
+<%@page import="Model.services.Dao"%>
 <%@page import="Model.serveur.Menu"%>
-<%@page import="Model.services.DAO"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,10 +86,7 @@
 						</div>
 					</div></section>
 					<section class="col-1-3"><div class="wrap-col">
-						<% 
-                                                    DAO dao = new DAO();
-                                                    for(int i=0;i<dao.get_menu().getId_produit().length;i++){
-                                                %>
+						
                                                     <div class="box">
                                                             <div>
                                                                     <h2>Nos <span>Menu</span></h2>
@@ -98,7 +95,6 @@
                                                                     <a href="#" class="button1">Read More</a>
                                                             </div>
                                                     </div>
-                                                <% }%>
 					</div></section>
 				
 					
